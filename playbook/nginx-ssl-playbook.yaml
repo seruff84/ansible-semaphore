@@ -61,7 +61,7 @@
   - name: debug
     debug:
       msg: "{{item}}"
-      with_items: "{{ out.results | selectattr('found', 'equalto', 1) | map (attribute='invocation') | flatten  | map (attribute='module_args')| flatten | map (attribute='dest') | list}}"
+    with_items: "{{ out.results | selectattr('found', 'equalto', 1) | map (attribute='invocation') | flatten  | map (attribute='module_args')| flatten | map (attribute='dest') | list}}"
   
   - name: debug
     debug:
@@ -71,7 +71,7 @@
     block:
     - name: Ensure SSL cert is new
       lineinfile:
-        path: "{{item}}"
+        path: "{{ item }}"
         state: present
         regexp: '^\s*ssl_certificate\s.*{{ domain }}.*;$'
         line: 'ssl_certificate         {{default_nginx_conf_path}}/ssl/{{ domain }}.crt;'
@@ -79,9 +79,8 @@
 
     - name: Ensure SSL key is new
       lineinfile:
-        path: "{{item}}"
+        path: "{{ item }}"
         state: present
         regexp: '^\s*ssl_certificate_key\s.*{{ domain }}.*;$'
         line: 'ssl_certificate_key        {{default_nginx_conf_path}}/ssl/{{ domain }}.key;'
       with_items: "{{ findresult.files | map(attribute='path') | list}}"
-	

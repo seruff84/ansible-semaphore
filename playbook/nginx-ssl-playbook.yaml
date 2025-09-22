@@ -1,0 +1,88 @@
+---
+- name: Add ssl cert to nginx on linux
+  hosts: test-vm-ansible
+  become: yes
+  tasks:    
+  - name: set conf path
+    set_fact:
+    nginx_conf_path: "{{ default_nginx_conf_path }}"     
+
+  - name: set domain conf path
+    set_fact:
+    nginx_domain_path: "{{ default_nginx_conf_path }}/sites-enabled"
+
+  - name: create  folder
+    ansible.builtin.file:
+    path: "{{ default_nginx_conf_path }}/ssl"
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory    
+
+  - name: Ensure thet SSL file is new
+    block:
+    - name: Ensure thet SSL crt file is new
+      ansible.builtin.copy:
+      src: "{{ src_cert_folder }}/{{ pubkey_src_name }}"
+      dest: "{{ default_nginx_conf_path }}/ssl/{{ domain }}.crt"
+      owner: root
+      group: root
+      mode: '0640'
+      backup: yes
+
+  - name: Ensure thet SSL key file is new
+    ansible.builtin.copy:
+      src: "{{ src_cert_folder }}/{{ privkey_src_name }}"
+      dest: "{{ default_nginx_conf_path }}/ssl/{{ domain }}.key"
+      owner: root
+      group: root
+      mode: '0600'
+      backup: yes
+      notify: reload Nginx   
+  
+  - name: find domain in folder
+    find:
+      paths: "{{ nginx_domain_path }}"
+      file_type: "{{ item }}"
+      loop:
+      - file
+      - link
+      register: findresult
+  - name: find avs ssl domain
+    lineinfile:
+      dest: "{{item}}"
+      regexp: '^\s*ssl_certificate\s?{{ domain }}.*;$'
+      state: absent
+      check_mode: yes
+      changed_when: false
+      with_items: "{{ findresult.files | map(attribute='path') | list}}"
+      register: out
+
+  - name: debug
+    debug:
+      msg: "{{item}}"
+      with_items: "{{ out.results | selectattr('found', 'equalto', 1) | map (attribute='invocation') | flatten  | map (attribute='module_args')| flatten | map (attribute='dest') | list}}"
+  
+  - name: debug
+    debug:
+      msg: "{{nginx_domain_path}}"
+  
+  - name: add cer to config
+    block:
+    - name: Ensure SSL cert is new
+      lineinfile:
+        path: "{{item}}"
+        state: present
+        regexp: '^\s*ssl_certificate\s.*{{ domain }}.*;$'
+        line: 'ssl_certificate         {{default_nginx_conf_path}}/ssl/{{ domain }}.crt;'
+      with_items: "{{ out.results | selectattr('found', 'equalto', 1) | map (attribute='invocation') | flatten  | map (attribute='module_args')| flatten | map (attribute='dest') | list}}"
+
+    - name: Ensure SSL key is new
+      lineinfile:
+        path: "{{item}}"
+        state: present
+        regexp: '^\s*ssl_certificate_key\s.*{{ domain }}.*;$'
+        line: 'ssl_certificate_key        {{default_nginx_conf_path}}/ssl/{{ domain }}.key;'
+      with_items: "{{ out.results | selectattr('found', 'equalto', 1) | map (attribute='invocation') | flatten  | map (attribute='module_args')| flatten | map (attribute='dest') | list}}"
+      notify: restart Nginx
+	

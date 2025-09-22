@@ -48,15 +48,15 @@
       - file
       - link
       register: findresult
-  - name: find avs ssl domain
-    lineinfile:
-      dest: "{{item}}"
-      regexp: '^\s*server_name\s+.*{{ domain }}\s*;$'
-      state: absent
-      check_mode: yes
-      changed_when: false
-    with_items: "{{ findresult.files | map(attribute='path') | list}}"
-    register: out
+#   - name: find avs ssl domain
+#     lineinfile:
+#       dest: "{{item}}"
+#       regexp: '^\s*server_name\s+.*{{ domain }}\s*;$'
+#       state: absent
+#       check_mode: yes
+#       changed_when: false
+#     with_items: "{{ findresult.files | map(attribute='path') | list}}"
+#     register: out
 
   - name: debug
     debug:

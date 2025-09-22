@@ -5,40 +5,40 @@
   tasks:    
   - name: set conf path
     set_fact:
-    nginx_conf_path: "{{ default_nginx_conf_path }}"     
+      nginx_conf_path: "{{ default_nginx_conf_path }}"     
 
   - name: set domain conf path
     set_fact:
-    nginx_domain_path: "{{ default_nginx_conf_path }}/sites-enabled"
+      nginx_domain_path: "{{ default_nginx_conf_path }}/sites-enabled"
 
   - name: create  folder
     ansible.builtin.file:
-    path: "{{ default_nginx_conf_path }}/ssl"
-    owner: root
-    group: root
-    mode: '0755'
-    state: directory    
+      path: "{{ default_nginx_conf_path }}/ssl"
+      owner: root
+      group: root
+      mode: '0755'
+      state: directory    
 
   - name: Ensure thet SSL file is new
     block:
     - name: Ensure thet SSL crt file is new
       ansible.builtin.copy:
-      src: "{{ src_cert_folder }}/{{ pubkey_src_name }}"
-      dest: "{{ nginx_conf_path }}/ssl/{{ domain }}.crt"
-      owner: root
-      group: root
-      mode: '0640'
-      backup: yes
+        src: "{{ src_cert_folder }}/{{ pubkey_src_name }}"
+        dest: "{{ nginx_conf_path }}/ssl/{{ domain }}.crt"
+        owner: root
+        group: root
+        mode: '0640'
+        backup: yes
 
-  - name: Ensure thet SSL key file is new
-    ansible.builtin.copy:
-      src: "{{ src_cert_folder }}/{{ privkey_src_name }}"
-      dest: "{{ nginx_conf_path }}/ssl/{{ domain }}.key"
-      owner: root
-      group: root
-      mode: '0600'
-      backup: yes
-      notify: reload Nginx   
+    - name: Ensure thet SSL key file is new
+      ansible.builtin.copy:
+        src: "{{ src_cert_folder }}/{{ privkey_src_name }}"
+        dest: "{{ nginx_conf_path }}/ssl/{{ domain }}.key"
+        owner: root
+        group: root
+        mode: '0600'
+        backup: yes
+    notify: reload Nginx   
   
   - name: find domain in folder
     find:
@@ -47,7 +47,7 @@
       loop:
       - file
       - link
-      register: findresult
+    register: findresult
 #   - name: find avs ssl domain
 #     lineinfile:
 #       dest: "{{item}}"

@@ -70,7 +70,7 @@
       lineinfile:
         path: "{{ item }}"
         state: present
-        regexp: '^\s*ssl_certificate\s.*{{ domain }}.*;$'
+        regexp: '^\s*ssl_certificate\s*.*;$'
         line: 'ssl_certificate         {{default_nginx_conf_path}}/ssl/{{ domain }}.crt;'
       with_items: "{{ findresult.files | map(attribute='path') | list}}"
 
@@ -78,7 +78,7 @@
       lineinfile:
         path: "{{ item }}"
         state: present
-        regexp: '^\s*ssl_certificate_key\s.*{{ domain }}.*;$'
+        regexp: '^\s*ssl_certificate_key\s*.*;$'
         line: 'ssl_certificate_key        {{default_nginx_conf_path}}/ssl/{{ domain }}.key;'
       with_items: "{{ findresult.files | map(attribute='path') | list}}"
 

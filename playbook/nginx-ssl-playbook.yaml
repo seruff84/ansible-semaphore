@@ -43,7 +43,7 @@
   - name: Find domain in folder
     find: 
       paths: "{{ nginx_domain_path }}"
-      file_type: all
+      file_type: any
     register: findresult
 #   - name: find avs ssl domain
 #     lineinfile:

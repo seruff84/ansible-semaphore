@@ -58,10 +58,10 @@
 #     with_items: "{{ findresult.files | map(attribute='path') | list}}"
 #     register: out
 
-  - name: debug
-    debug:
-      msg: "{{item}}"
-    with_items: "{{ out.results | selectattr('found', 'equalto', 1) | map (attribute='invocation') | flatten  | map (attribute='module_args')| flatten | map (attribute='dest') | list}}"
+  # - name: debug
+  #   debug:
+  #     msg: "{{item}}"
+  #   with_items: "{{ out.results | selectattr('found', 'equalto', 1) | map (attribute='invocation') | flatten  | map (attribute='module_args')| flatten | map (attribute='dest') | list}}"
   
   - name: debug
     debug:

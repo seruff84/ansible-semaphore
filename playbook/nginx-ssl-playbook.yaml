@@ -38,9 +38,9 @@
         group: root
         mode: '0600'
         backup: yes
-    notify: reload Nginx   
+    notify: Reload Nginx   
   
-  - name: find domain in folder
+  - name: Find domain in folder
     find:
       paths: "{{ nginx_domain_path }}"
       file_type: "{{ item }}"
@@ -84,3 +84,9 @@
         regexp: '^\s*ssl_certificate_key\s.*{{ domain }}.*;$'
         line: 'ssl_certificate_key        {{default_nginx_conf_path}}/ssl/{{ domain }}.key;'
       with_items: "{{ findresult.files | map(attribute='path') | list}}"
+
+  handlers:
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded

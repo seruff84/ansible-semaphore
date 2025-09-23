@@ -65,7 +65,7 @@
   
   - name: debug
     debug:
-      msg: "{{nginx_domain_path}}"
+      msg: "{{ nginx_domain_path }}{{ findresult }}"
   
   - name: add cer to config
     block:

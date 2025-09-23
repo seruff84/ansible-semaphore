@@ -41,12 +41,9 @@
     notify: Reload Nginx   
   
   - name: Find domain in folder
-    find:
+    find: 
       paths: "{{ nginx_domain_path }}"
-      file_type: "{{ item }}"
-    loop:
-    - file
-    - link
+      file_type: all
     register: findresult
 #   - name: find avs ssl domain
 #     lineinfile:

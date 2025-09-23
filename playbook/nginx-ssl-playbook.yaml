@@ -44,9 +44,9 @@
     find:
       paths: "{{ nginx_domain_path }}"
       file_type: "{{ item }}"
-      loop:
-      - file
-      - link
+    loop:
+    - file
+    - link
     register: findresult
 #   - name: find avs ssl domain
 #     lineinfile:

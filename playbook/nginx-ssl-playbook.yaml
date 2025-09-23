@@ -1,6 +1,6 @@
 ---
 - name: Add ssl cert to nginx on linux
-  # hosts: test-vm-ansible
+  hosts: test-vm-ansible
   become: yes
   tasks:    
   - name: set conf path

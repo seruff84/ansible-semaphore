@@ -1,0 +1,24 @@
+- name: Create Ansible user on Microtik
+  become: true
+  become_method: ansible.netcommon.enable
+  hosts: routeros
+  gather_facts: false
+  vars:
+    crt_local_path: "/home/dv_drobot/project/files/ansible_rsa"
+    mikrotik_ansible_crt: "crt"
+    mikrotik_ansible_user: "ansible"
+    mikrotik_ansible_pass: "very_long_pass"
+  tasks:
+    - name: Certificate upload
+      ansible.netcommon.net_put:
+        src: "{{ crt_local_path }}"
+        dest: "/{{ mikrotik_ansible_crt }}"
+        protocol: sftp
+
+    - name: Create ansible user
+      community.routeros.command:
+        commands: "/user/add name={{ mikrotik_ansible_user }} group=full password={{ mikrotik_ansible_pass }}"
+
+    - name: Add ansible user certificate
+      community.routeros.command:
+        commands: "/user/ssh-keys/import public-key-file={{ mikrotik_ansible_crt }} user={{ mikrotik_ansible_user }}"

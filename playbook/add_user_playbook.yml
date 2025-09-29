@@ -7,7 +7,7 @@
     crt_local_path: "/home/dv_drobot/project/files/ansible_rsa"
     mikrotik_ansible_crt: "crt.txt"
     mikrotik_ansible_user: "ansible"
-    mikrotik_ansible_pass: "{{ansible_password}}"
+    mikrotik_ansible_pass: "{{mikrotik_password}}"
   tasks:
     - name: Create crt file
       community.routeros.command: 

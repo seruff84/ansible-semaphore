@@ -14,7 +14,7 @@
         commands: "/file print file={{ mikrotik_ansible_crt }}"
     - name: add public key to file
       community.routeros.command: 
-        commands: "/file set {{ mikrotik_ansible_crt }} contents={{ ssh_key }}"
+        commands: '/file set {{ mikrotik_ansible_crt }} contents="{{ ssh_key }}"'
     - name: debug key
       ansible.builtin.debug:
         msg: "{{ ssh_key }}"

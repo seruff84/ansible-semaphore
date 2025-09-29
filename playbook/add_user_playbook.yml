@@ -10,7 +10,8 @@
     mikrotik_ansible_pass: "very_long_pass"
   tasks:
     - name: Create ansible user
-      community.routeros.command: "/file set {{ mikrotik_ansible_crt }} contents={{ ssh_key }}"
+      community.routeros.command: 
+        command: "/file set {{ mikrotik_ansible_crt }} contents={{ ssh_key }}"
     # - name: Certificate upload
     #   ansible.netcommon.net_put:
     #     src: "{{ crt_local_path }}"

@@ -13,8 +13,8 @@
       community.routeros.command: 
         commands: "/file set {{ mikrotik_ansible_crt }} contents={{ ssh_key }}"
     - name: debug key
-        debug:
-          msg: "{{ ssh_key }}"
+      ansible.builtin.debug:
+        msg: "{{ ssh_key }}"
     # - name: Certificate upload
     #   ansible.netcommon.net_put:
     #     src: "{{ crt_local_path }}"

@@ -9,11 +9,13 @@
     mikrotik_ansible_user: "ansible"
     mikrotik_ansible_pass: "very_long_pass"
   tasks:
-    - name: Certificate upload
-      ansible.netcommon.net_put:
-        src: "{{ crt_local_path }}"
-        dest: "/{{ mikrotik_ansible_crt }}"
-        protocol: sftp
+    - name: Create ansible user
+      community.routeros.command: "/file set {{ mikrotik_ansible_crt }} contents={{ ssh_key }}"
+    # - name: Certificate upload
+    #   ansible.netcommon.net_put:
+    #     src: "{{ crt_local_path }}"
+    #     dest: "/{{ mikrotik_ansible_crt }}"
+    #     protocol: sftp
 
     - name: Create ansible user
       community.routeros.command:

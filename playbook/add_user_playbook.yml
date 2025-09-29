@@ -5,11 +5,14 @@
   gather_facts: false
   vars:
     crt_local_path: "/home/dv_drobot/project/files/ansible_rsa"
-    mikrotik_ansible_crt: "crt"
+    mikrotik_ansible_crt: "crt.txt"
     mikrotik_ansible_user: "ansible"
     mikrotik_ansible_pass: "very_long_pass"
   tasks:
     - name: Create crt file
+      community.routeros.command: 
+        commands: "/file print file={{ mikrotik_ansible_crt }}"
+    - name: add public key to file
       community.routeros.command: 
         commands: "/file set {{ mikrotik_ansible_crt }} contents={{ ssh_key }}"
     - name: debug key

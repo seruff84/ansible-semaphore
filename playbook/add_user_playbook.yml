@@ -34,6 +34,7 @@
     - name: Add Ansible user to Group
       community.routeros.command:
         commands: "/user set [find name={{ mikrotik_user_name }}] group=ssh-key-only"
+        
     - name: Debug vars
       debug:
         msg: "{{ mikrotik_user_name }}, {{ mikrotik_user_pass }}, {{ mikrotik_user_group }}, {{ mikrotik_user_group_pol }}, {{ mikrotik_user_crt }}, {{ mikrotik_user_crt_file }}"

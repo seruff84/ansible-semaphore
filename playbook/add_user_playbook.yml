@@ -4,21 +4,32 @@
   hosts: routeros
   gather_facts: false
   vars:
-    mikrotik_ansible_crt: "crt.txt"
-    mikrotik_ansible_user: "ansible"
-    mikrotik_ansible_pass: "{{mikrotik_password}}"
+    mikrotik_user_name: "Ansible"
+    mikrotik_user_pass: ""
+    mikrotik_user_group: "ssh-key-only"
+    mikrotik_user_crt: ""
+    mikrotik_user_crt_file: "user_crt.txt"
   tasks:
+    - name: Create  new Group
+      community.routeros.command: 
+        commands: "/user group add name={{ mikrotik_user_group }} policy=ssh,local"
+        
     - name: Create crt file
       community.routeros.command: 
-        commands: "/file print file={{ mikrotik_ansible_crt }}"
+        commands: "/file print file={{ mikrotik_user_crt_file }}"
+        
     - name: Add public key to file
       community.routeros.command: 
-        commands: '/file set {{ mikrotik_ansible_crt }} contents="{{ ssh_key }}"'
+        commands: '/file set {{ mikrotik_user_crt_file }} contents="{{ mikrotik_user_crt }}"'
 
     - name: Create Ansible user
       community.routeros.command:
-        commands: "/user/add name={{ mikrotik_ansible_user }} group=full password={{ mikrotik_ansible_pass }}"
+        commands: "/user/add name={{ mikrotik_user_name }} group=full password={{ mikrotik_user_pass }}"
 
     - name: Add Ansible user certificate
       community.routeros.command:
-        commands: "/user/ssh-keys/import public-key-file={{ mikrotik_ansible_crt }} user={{ mikrotik_ansible_user }}"
+        commands: "/user/ssh-keys/import public-key-file={{ mikrotik_user_crt_file }} user={{ mikrotik_user_name }}"
+        
+    - name: Add Ansible user to Group
+      community.routeros.command:
+        commands: "/user set [find name={{ mikrotik_user_name }}] group=ssh-key-only"

@@ -7,12 +7,13 @@
     mikrotik_user_name: "Ansible"
     mikrotik_user_pass: ""
     mikrotik_user_group: "ssh-key-only"
+    mikrotik_user_group_pol: "ssh, local"
     mikrotik_user_crt: ""
     mikrotik_user_crt_file: "user_crt.txt"
   tasks:
     - name: Create  new Group
       community.routeros.command: 
-        commands: "/user group add name={{ mikrotik_user_group }} policy=ssh,local"
+        commands: "/user group add name={{ mikrotik_user_group }} policy={{ mikrotik_user_group_pol }}"
         
     - name: Create crt file
       community.routeros.command: 
@@ -33,3 +34,6 @@
     - name: Add Ansible user to Group
       community.routeros.command:
         commands: "/user set [find name={{ mikrotik_user_name }}] group=ssh-key-only"
+    - name: Debug vars
+      debug:
+        msg: "{{ mikrotik_user_name }}, {{ mikrotik_user_pass }}, {{ mikrotik_user_group }}, {{ mikrotik_user_group_pol }}, {{ mikrotik_user_crt }}, {{ mikrotik_user_crt_file }}"
